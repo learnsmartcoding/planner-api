@@ -1,0 +1,114 @@
+﻿use master 
+go
+drop database Planner
+
+go
+
+use master
+CREATE DATABASE Planner
+go 
+use  Planner
+go
+
+
+CREATE TABLE [UserProfile] (
+    [UserProfileId] int NOT NULL IDENTITY(1,1),
+    [Email] nvarchar(200) NOT NULL,
+    [DisplayName] nvarchar(max) NULL,
+    [FirstName] nvarchar(max) NULL,
+    [LastName] nvarchar(max) NULL,
+    [HasLoggedIn] bit NOT NULL,
+    [PhoneNumber] nvarchar(10) NULL,
+    [PhoneNumberConfirmed] bit NULL,    
+    [AdObjectId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_UserProfiles] PRIMARY KEY ([UserProfileId])    
+);
+
+go
+
+CREATE TABLE Category(CategoryId INT NOT NULL IDENTITY(1,1), [Name] VARCHAR(255) NOT NULL, [Description]  VARCHAR(500), IsActive BIT,
+CONSTRAINT [PK_Category] PRIMARY KEY (CategoryId))
+
+go
+
+
+CREATE TABLE PlanDates(
+PlanDateId INT NOT NULL IDENTITY(1,1), 
+PlanDate DateTime2 NOT NULL, 
+[UserProfileId] int,
+IsActive BIT,
+CONSTRAINT [PK_PlanDate] PRIMARY KEY (PlanDateId),
+FOREIGN KEY ([UserProfileId]) REFERENCES [UserProfile] ([UserProfileId]))
+
+CREATE TABLE TimeSlots(
+TimeSlotId INT NOT NULL IDENTITY(1,1), 
+CategoryId INT,
+[SlotName] VARCHAR(255) NOT NULL, 
+[Description]  VARCHAR(500),
+OrderId SMALLINT, IsActive BIT,
+CONSTRAINT [PK_TimeSlots] PRIMARY KEY (TimeSlotId),
+FOREIGN KEY (CategoryId) REFERENCES Category (CategoryId))
+
+go
+
+CREATE TABLE PlanSchedule(
+PlanScheduleId INT NOT NULL IDENTITY(1,1), 
+PlanName VARCHAR(255) NULL,
+PlanDescription VARCHAR(500),
+IsActive BIT, 
+TimeSlotId INT,
+TaskPriority SMALLINT not null, 
+IsDone BIT,
+PlanDateId int,
+CONSTRAINT [PK_PlanSchedule] PRIMARY KEY (PlanScheduleId),
+FOREIGN KEY (TimeSlotId) REFERENCES TimeSlots (TimeSlotId),
+FOREIGN KEY (PlanDateId) REFERENCES PlanDates (PlanDateId))
+
+go
+
+CREATE TABLE PlanDateNotes(
+PlanDateNoteId INT NOT NULL IDENTITY(1,1), 
+Notes VARCHAR(1000) NULL, 
+PlanDateId int,
+CONSTRAINT [PK_PlanDateNote] PRIMARY KEY (PlanDateNoteId),
+FOREIGN KEY (PlanDateId) REFERENCES PlanDates (PlanDateId))
+
+
+
+
+USE [Planner]
+GO
+
+INSERT INTO [dbo].[Category] ([Name],[Description],[IsActive]) VALUES('Priority Tasks','Priority tasks to perform',1)
+INSERT INTO [dbo].[Category] ([Name],[Description],[IsActive]) VALUES('To Do List ','To do list tasks',1)
+INSERT INTO [dbo].[Category] ([Name],[Description],[IsActive]) VALUES('Things to Get Done','Things to Get Done tasks',1)
+INSERT INTO [dbo].[Category] ([Name],[Description],[IsActive]) VALUES('Plans and Schedules','Plans and Schedules for each hour of the day',1)
+INSERT INTO [dbo].[Category] ([Name],[Description],[IsActive]) VALUES('Health','Health',1)
+INSERT INTO [dbo].[Category] ([Name],[Description],[IsActive]) VALUES('Exercise','Exercise',1)
+GO
+
+USE [Planner]
+GO
+
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '06:00 am', '6 am slot',1,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '07:00 am', '7 am slot',2,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '08:00 am', '8 am slot',3,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '09:00 am', '9 am slot',4,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '10:00 am', '10 am slot',5,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '11:00 am', '11 am slot',6,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '12:00 pm', '12 pm slot',7,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '01:00 pm', '1 pm slot',8,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '02:00 pm', '2 pm slot',9,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '03:00 pm', '3 pm slot',10,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '04:00 pm', '4 pm slot',11,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '05:00 pm', '5 pm slot',12,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '06:00 pm', '6 pm slot',13,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '07:00 pm', '7 pm slot',14,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '08:00 pm', '8 pm slot',15,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '09:00 pm', '9 pm slot',16,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '10:00 pm', '10 pm slot',17,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (4, '11:00 pm', '11 pm slot',18,1)
+
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (1, 'Priorities', 'Priority task slots',1,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (2, 'To Do List', 'Todo task slots',1,1)
+INSERT INTO[dbo].[TimeSlots] ([CategoryId],[SlotName],[Description],[OrderId],[IsActive]) VALUES (3, 'Things to Get Done', 'ThingsToGetDone task slots',1,1)
